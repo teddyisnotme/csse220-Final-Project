@@ -26,12 +26,14 @@ public class Enemy extends GameObject {
     public void update() {
         if (movingRight) 
         	x += 2; 
+        	
         else 
         	x -= 2;
         
         if (x > rightBound || x < leftBound) 
         	movingRight = !movingRight;
     }
+    
 
     @Override
     public void drawOn(Graphics2D g) {
