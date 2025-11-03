@@ -11,7 +11,7 @@ public class GameComponent extends JComponent {
     private final java.util.List<GameObject> objects = new ArrayList<>();
     private Player player;
     private Enemy enemy;
-    private final Timer timer;   // using javax.swing.Timer now
+    private final Timer timer;   //using javax.swing.Timer now
 
     public GameComponent() {
         player = new Player(this, 100, 400);
