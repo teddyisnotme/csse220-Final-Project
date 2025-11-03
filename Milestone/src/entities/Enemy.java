@@ -7,7 +7,7 @@ import javax.imageio.ImageIO;
 
 /**
  * Class: Enemy
- * @author 
+ * @author Agnes Wang, Shi Liang, Teddy Wei
  * <br>Purpose: Represents an automatically moving enemy object in the game.
  * <br>Restrictions: Movement is restricted between specified left and right bounds.
  * <br>For example:
