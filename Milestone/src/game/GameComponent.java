@@ -25,6 +25,7 @@ public class GameComponent extends JComponent {
     private Player player;
     private Enemy enemy;
     private final Timer timer;
+    private final java.util.List<Collectible> collectibles = new ArrayList<>();
 
     /**
      * ensures: Initializes player, enemy, and timer for automatic game updates.
@@ -34,6 +35,10 @@ public class GameComponent extends JComponent {
         enemy = new Enemy(this, 400, 400, 100, 700);
         objects.add(player);
         objects.add(enemy);
+        
+        collectibles.add(new Collectible(this, 250, 420, 10));
+        collectibles.add(new Collectible(this, 600, 420, 20)); 
+        collectibles.add(new Collectible(this, 300, 350, 50)); 
 
         addKeyListener(new GameController(player));
         setFocusable(true);
@@ -56,6 +61,8 @@ public class GameComponent extends JComponent {
     private void updateState() {
         for (GameObject obj : objects)
         	obj.update();
+        for (Collectible c : collectibles)
+            c.update();
         handleCollisions();
     } // updateState
 
@@ -65,6 +72,19 @@ public class GameComponent extends JComponent {
     private void handleCollisions() {
         if (player.overlaps(enemy)) {
             player.loseLife();
+        }
+     // Handle collectible pickup logic
+        Iterator<Collectible> it = collectibles.iterator();
+        while (it.hasNext()) {
+            Collectible c = it.next();
+            if (player.tryCollect(c)) {
+                it.remove();
+            }
+        }
+     // End game if player runs out of lives
+        if (!player.isAlive()) {
+            timer.stop();
+            JOptionPane.showMessageDialog(this, "Game Over! Final Score: " + player.getScore());
         }
     } // handleCollisions
 

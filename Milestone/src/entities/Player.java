@@ -26,6 +26,8 @@ public class Player extends GameObject {
     private double gravity = 0.6;
     private double jumpStrength = -12;
     private int lives = 3;
+    private int score = 0;
+    private boolean pressingDown = false;
     private BufferedImage sprite;
 
     /**
@@ -74,16 +76,57 @@ public class Player extends GameObject {
      */
     public int getLives() { 
     	return lives; 
-    } //getLives
+    } // getLives
     
     /**
-     * ensures: Decreases player’s life count and prints “Game over!” when lives reach zero.
+     * ensures: Decreases player’s life count.
      */
     public void loseLife() {
-        if (--lives <= 0) {
-            System.out.println("Game over!");
+        --lives;
+        if (lives < 0) {
+        	lives = 0;
         }
     } // loseLife
+    
+    /**
+     * ensures: Returns whether the player is still alive (has > 0 lives).
+     * @return true if player has at least one life
+     */
+    public boolean isAlive() {
+        return lives > 0;
+    } // isAlive
+    
+    /**
+     * ensures: Called by input handling to set whether the down key is pressed.
+     * @param pressed true if down arrow is currently pressed
+     */
+    public void setPressingDown(boolean pressed) {
+        pressingDown = pressed;
+    } // setPressingDown
+   
+    /**
+     * ensures: Try to collect a Collectible when overlapping and down is pressed.
+     * Returns true if collected (caller can use this to remove the collectible from world).
+     * @param c the collectible to attempt to pick up
+     * @return true if the collectible was picked up
+     */
+    public boolean tryCollect(Collectible c) {
+        if (c == null) return false;
+        if (!c.isCollected() && getBounds().intersects(c.getBounds()) && pressingDown) {
+            score += c.getValue(); 
+            c.collect();
+            return true;
+        }
+        return false;
+    } // tryCollect
+    
+    /**
+     * ensures: Returns player's score for HUD display.
+     * @return current score
+     */
+    public int getScore() {
+        return score;
+    } // getScore
     
     /**
      * ensures: Updates player velocity, position, and applies gravity and boundary wrapping.
