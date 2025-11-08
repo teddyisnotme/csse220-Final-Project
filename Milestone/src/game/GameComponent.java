@@ -72,16 +72,18 @@ public class GameComponent extends JComponent {
     private void handleCollisions() {
         if (player.overlaps(enemy)) {
             player.loseLife();
+            SoundEffect.play("/assets/sounds/collision.wav");
         }
-     // Handle collectible pickup logic
+        
         Iterator<Collectible> it = collectibles.iterator();
         while (it.hasNext()) {
             Collectible c = it.next();
             if (player.tryCollect(c)) {
                 it.remove();
+                SoundEffect.play("/assets/sounds/pickup.wav");
             }
         }
-     // End game if player runs out of lives
+     
         if (!player.isAlive()) {
             timer.stop();
             JOptionPane.showMessageDialog(this, "Game Over! Final Score: " + player.getScore());
