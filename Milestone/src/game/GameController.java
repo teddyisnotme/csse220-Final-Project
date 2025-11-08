@@ -37,6 +37,7 @@ public class GameController extends KeyAdapter {
                 case KeyEvent.VK_LEFT -> player.moveLeft(true);
                 case KeyEvent.VK_RIGHT -> player.moveRight(true);
                 case KeyEvent.VK_UP -> player.jump();
+                case KeyEvent.VK_DOWN -> player.setPressingDown(true);
                 default -> throw new IllegalArgumentException("Invalid key pressed: " + e.getKeyCode());
             }
         } catch (IllegalArgumentException ex) {
@@ -54,5 +55,7 @@ public class GameController extends KeyAdapter {
         	player.moveLeft(false);
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) 
         	player.moveRight(false);
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) 
+            player.setPressingDown(false);
     } //keyReleased
 } // end GameController
