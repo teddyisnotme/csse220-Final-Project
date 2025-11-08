@@ -2,6 +2,8 @@ package entities;
 
 import game.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 /**
  * Class: Collectible
@@ -12,6 +14,7 @@ import java.awt.*;
 public class Collectible extends GameObject {
     private int value;
     private boolean collected = false;
+    private BufferedImage sprite;
 
     /**
      * ensures: Creates a collectible at the given position and with a point value.
@@ -23,6 +26,11 @@ public class Collectible extends GameObject {
     public Collectible(GameComponent game, double x, double y, int value) {
         super(game, x, y, 20, 20);
         this.value = value;
+        try {
+            sprite = ImageIO.read(getClass().getResource("/assets/sprites/collectible.png"));
+        } catch (Exception e) {
+            System.err.println("Collectible sprite missing, using placeholder.");
+        }
     }
 
     /**
@@ -61,8 +69,12 @@ public class Collectible extends GameObject {
     @Override
     public void drawOn(Graphics2D g) {
         if (!collected) {
-            g.setColor(Color.ORANGE);
-            g.fillOval((int)x, (int)y, width, height);
+            if (sprite != null)
+                g.drawImage(sprite, (int)x, (int)y, width, height, null); // ⭐ NEW
+            else {
+                g.setColor(Color.ORANGE);
+                g.fillOval((int)x, (int)y, width, height);
+            }
         }
     }
 }
