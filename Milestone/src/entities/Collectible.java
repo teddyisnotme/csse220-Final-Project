@@ -45,6 +45,14 @@ public class Collectible extends GameObject {
     public void collect() {
         collected = true;
     }
+    
+    /**
+     * ensures: Updates collectible state (currently does nothing).
+     */
+    @Override
+    public void update() {
+        
+    }
 
     /**
      * ensures: Draws collectible as a yellow circle unless collected.
