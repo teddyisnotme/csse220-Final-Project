@@ -3,8 +3,8 @@ package game;
 import entities.*;
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;           // keep for collections
-import javax.swing.Timer;     // ✅ correct Timer import
+import java.util.*;     
+import javax.swing.Timer;     
 import java.awt.event.*;
 
 /**
@@ -22,10 +22,10 @@ import java.awt.event.*;
  */
 public class GameComponent extends JComponent {
     private final java.util.List<GameObject> objects = new ArrayList<>();
+    private final java.util.List<Collectible> collectibles = new ArrayList<>();
     private Player player;
     private Enemy enemy;
     private final Timer timer;
-    private final java.util.List<Collectible> collectibles = new ArrayList<>();
 
     /**
      * ensures: Initializes player, enemy, and timer for automatic game updates.
@@ -40,7 +40,7 @@ public class GameComponent extends JComponent {
         collectibles.add(new Collectible(this, 600, 420, 20)); 
         collectibles.add(new Collectible(this, 300, 350, 50)); 
 
-        addKeyListener(new GameController(player));
+        addKeyListener(new GameController(player, collectibles));
         setFocusable(true);
 
         timer = new Timer(16, e -> gameLoop());

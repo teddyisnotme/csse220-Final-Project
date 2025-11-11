@@ -8,8 +8,8 @@ import java.util.List;
 
 /**
  * Class: GameController
- * Author: Agnes Wang, Shi Liang, Teddy Wei
- * Purpose: Handles keyboard input to control the player's movement and actions, including item collection.
+ * @author Agnes Wang, Shi Liang, Teddy Wei
+ * <br>Purpose: Handles keyboard input to control the player's movement and actions, including item collection.
  */
 public class GameController extends KeyAdapter {
     private final Player player;
@@ -25,7 +25,9 @@ public class GameController extends KeyAdapter {
         this.collectibles = collectibles;
     }
 
-    /** Handles key press events for movement, jump, and collection. */
+    /**
+     * ensures: Handles key press events for movement, jump, and collection. 
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         try {
@@ -47,13 +49,15 @@ public class GameController extends KeyAdapter {
         } catch (IllegalArgumentException ex) {
             System.err.println(ex.getMessage());
         }
-    }
+    } // keyPressed
 
-    /** Handles key release events to stop movement and collection. */
+    /** 
+     * ensures: Handles key release events to stop movement and collection. 
+     */
     @Override
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_LEFT) player.moveLeft(false);
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) player.moveRight(false);
         if (e.getKeyCode() == KeyEvent.VK_DOWN) player.setPressingDown(false);
-    }
-}
+    } // keyReleased
+} // end GameController
