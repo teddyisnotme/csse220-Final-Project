@@ -70,7 +70,7 @@ public class Collectible extends GameObject {
     public void drawOn(Graphics2D g) {
         if (!collected) {
             if (sprite != null)
-                g.drawImage(sprite, (int)x, (int)y, width, height, null); // ⭐ NEW
+                g.drawImage(sprite, (int)x, (int)y, width, height, null);
             else {
                 g.setColor(Color.ORANGE);
                 g.fillOval((int)x, (int)y, width, height);
