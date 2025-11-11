@@ -74,7 +74,7 @@ public class GameComponent extends JComponent {
     private void handleCollisions() {
         if (player.overlaps(enemy)) {
             player.loseLife();
-            SoundEffect.play("/assets/sounds/collision.wav");
+            SoundEffect.play("/assets/sprites/collision.wav");
         }
 
         Iterator<Collectible> it = collectibles.iterator();
@@ -82,7 +82,7 @@ public class GameComponent extends JComponent {
             Collectible c = it.next();
             if (player.tryCollect(c)) {
                 it.remove();
-                SoundEffect.play("/assets/sounds/pickup.wav");
+                SoundEffect.play("/assets/sprites/pickup.wav");
             }
         }
 
