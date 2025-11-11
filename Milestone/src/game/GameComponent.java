@@ -1,11 +1,14 @@
 package game;
 
 import entities.*;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;     
 import javax.swing.Timer;     
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Class: GameComponent
@@ -26,19 +29,26 @@ public class GameComponent extends JComponent {
     private Player player;
     private Enemy enemy;
     private final Timer timer;
+    private BufferedImage background;
 
     /**
      * ensures: Initializes player, enemy, collectibles, and timer for automatic game updates.
      */
     public GameComponent() {
+    	try {
+    	    background = ImageIO.read(getClass().getResource("/assets/sprites/background.png"));
+    	} catch (Exception e) {
+    	    System.err.println("Background image not found.");
+    	}
+    	
         player = new Player(this, 100, 400);
         enemy = new Enemy(this, 400, 400, 100, 700);
         objects.add(player);
         objects.add(enemy);
-       
-        collectibles.add(new Collectible(this, 250, 420, 10));
-        collectibles.add(new Collectible(this, 600, 420, 20)); 
-        collectibles.add(new Collectible(this, 300, 350, 50)); 
+
+        collectibles.add(new Collectible(this, 250, 450, 10));
+        collectibles.add(new Collectible(this, 200, 430, 20)); 
+        collectibles.add(new Collectible(this, 300, 475, 20)); 
 
         addKeyListener(new GameController(player, collectibles));
         setFocusable(true);
@@ -46,6 +56,7 @@ public class GameComponent extends JComponent {
         timer = new Timer(16, e -> gameLoop());
         timer.start();
     }
+
 
     /** 
      * ensures: Runs the game loop by updating state and repainting the screen. 
@@ -72,9 +83,27 @@ public class GameComponent extends JComponent {
      * ensures: Detects collisions between player and enemy, reduces player lives, handles collectible pickups.
      */
     private void handleCollisions() {
-        if (player.overlaps(enemy)) {
+        if (player.overlaps(enemy) && player.canBeHit()) {
             player.loseLife();
+            player.markHit();
             SoundEffect.play("/assets/sprites/collision.wav");
+
+            double tempVx = player.vx;
+            double tempVy = player.vy;
+            player.vx = -enemy.vx;
+            player.vy = -enemy.vy;
+            enemy.vx = -tempVx;
+            enemy.vy = -tempVy;
+
+            double overlapX = (player.x + player.width/2) - (enemy.x + enemy.width/2);
+            double overlapY = (player.y + player.height/2) - (enemy.y + enemy.height/2);
+
+            player.x += Math.signum(overlapX);
+            player.y += Math.signum(overlapY);
+            enemy.x -= Math.signum(overlapX);
+            enemy.y -= Math.signum(overlapY);
+        } else if (!player.overlaps(enemy)) {
+            player.resetHit();
         }
 
         Iterator<Collectible> it = collectibles.iterator();
@@ -86,16 +115,36 @@ public class GameComponent extends JComponent {
             }
         }
 
+        if (collectibles.isEmpty()) {
+            int groundY = getHeight() - 80;
+            collectibles.add(new Collectible(this, 200, groundY - 30, 10));
+            collectibles.add(new Collectible(this, 400, groundY - 30, 20));
+            collectibles.add(new Collectible(this, 600, groundY - 60, 50));
+        }
+
         if (!player.isAlive()) {
             timer.stop();
             JOptionPane.showMessageDialog(this, 
                 "Game Over! Final Score: " + player.getScore(), 
                 "Game Over", JOptionPane.INFORMATION_MESSAGE);
         }
-    }
+    } // handleCollision
+
+
 
     /**
-     * ensures: Draws all game objects, collectibles, and HUD.
+     * ensures: Adds a new collectible at a random position with random value.
+     */
+    private Collectible spawnCollectible() {
+        double x = 50 + Math.random() * (getWidth() - 100);
+        double y = 50 + Math.random() * (getHeight() - 100);
+        int value = 10 + (int)(Math.random() * 50);
+        return new Collectible(this, x, y, value);
+    } // spawnCollectible
+
+    
+    /**
+     * ensures: Draws all game objects, collectibles, background, and HUD.
      * @param g Graphics for rendering
      */
     @Override
@@ -105,6 +154,13 @@ public class GameComponent extends JComponent {
 
         g2.setColor(new Color(210, 240, 255)); 
         g2.fillRect(0, 0, getWidth(), getHeight());
+        
+        if (background != null) {
+            g2.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+        } else {
+            g2.setColor(new Color(210, 240, 255));
+            g2.fillRect(0, 0, getWidth(), getHeight());
+        }
 
         for (Collectible c : collectibles) {
         	c.drawOn(g2);

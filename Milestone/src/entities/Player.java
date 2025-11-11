@@ -29,6 +29,7 @@ public class Player extends GameObject {
     private int score = 0;
     private boolean pressingDown = false;
     private BufferedImage sprite;
+    private boolean recentlyHit = false;
 
     /**
      * ensures: Initializes player position, size, and loads player sprite image.
@@ -155,6 +156,18 @@ public class Player extends GameObject {
         if (x > game.getWidth()) 
         	x = 0;
     } // update
+    
+    public void resetHit() {
+        recentlyHit = false;
+    }
+
+    public boolean canBeHit() {
+        return !recentlyHit;
+    }
+
+    public void markHit() {
+        recentlyHit = true;
+    }
 
     /**
      * ensures: Draws the player sprite or a green rectangle if missing.
