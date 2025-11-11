@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * Class: GameComponent
- * Author: Agnes Wang, Shi Liang, Teddy Wei
+ * @author Agnes Wang, Shi Liang, Teddy Wei
  * <br>Purpose: Serves as the main game panel responsible for updating, drawing, and managing all game objects.
  * <br>Restrictions: Must be added to a JFrame to be displayed properly.
  * <br>Example:
