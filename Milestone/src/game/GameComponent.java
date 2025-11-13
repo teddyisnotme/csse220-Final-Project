@@ -85,7 +85,7 @@ public class GameComponent extends JComponent {
         if (player.overlaps(enemy) && player.canBeHit()) {
             player.loseLife();
             player.markHit();
-            SoundEffect.play("/assets/sprites/collision.wav");
+            SoundEffect.play("/assets/sounds/collision.wav");
 
             double tempVx = player.vx;
             double tempVy = player.vy;
@@ -110,16 +110,16 @@ public class GameComponent extends JComponent {
             Collectible c = it.next();
             if (player.tryCollect(c)) {
                 it.remove();
-                SoundEffect.play("/assets/sprites/pickup.wav");
+                SoundEffect.play("/assets/sounds/pickup.wav");
             }
         }
 
         if (collectibles.isEmpty()) {
-            int groundY = getHeight() - 80;
-            collectibles.add(new Collectible(this, 200, groundY - 30, 10));
-            collectibles.add(new Collectible(this, 400, groundY - 30, 20));
-            collectibles.add(new Collectible(this, 600, groundY - 60, 50));
+            for (int i = 0; i < 3; i++) {
+                collectibles.add(spawnCollectible());
+            }
         }
+
 
         if (!player.isAlive()) {
             timer.stop();
@@ -136,10 +136,12 @@ public class GameComponent extends JComponent {
      */
     private Collectible spawnCollectible() {
         double x = 50 + Math.random() * (getWidth() - 100);
-        double y = 50 + Math.random() * (getHeight() - 100);
+        int groundY = getHeight() - 80;
+        double y = groundY - 30 - Math.random() * 40; // spawn near ground
         int value = 10 + (int)(Math.random() * 50);
         return new Collectible(this, x, y, value);
     } // spawnCollectible
+
 
     
     /**

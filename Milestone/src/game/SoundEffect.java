@@ -39,6 +39,7 @@ public class SoundEffect {
 	        System.err.println("Error playing sound: " + soundFile);
 	        e.printStackTrace();
 	    }
+
 	}
 
 }
