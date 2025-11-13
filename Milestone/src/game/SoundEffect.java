@@ -22,16 +22,24 @@ public class SoundEffect {
      * <br>Exceptions are caught and logged without crashing the program.
      * @param soundFile the path to the audio file within the resources (e.g., "/assets/sounds/pickup.wav")
      */
-    public static void play(String soundFile) {
-        try {
-            URL url = SoundEffect.class.getResource(soundFile);
-            AudioInputStream audio = AudioSystem.getAudioInputStream(url);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audio);
-            clip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            System.err.println("Error playing sound: " + soundFile);
-        }
-    }
+	public static void play(String soundFile) {
+	    try {
+	        URL url = SoundEffect.class.getResource(soundFile);
+	        if (url == null) {
+	            System.err.println("Sound file not found: " + soundFile);
+	            return;
+	        }
+
+	        try (AudioInputStream audio = AudioSystem.getAudioInputStream(url)) {
+	            Clip clip = AudioSystem.getClip();
+	            clip.open(audio);
+	            clip.start();
+	        }
+	    } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+	        System.err.println("Error playing sound: " + soundFile);
+	        e.printStackTrace();
+	    }
+	}
+
 }
 
