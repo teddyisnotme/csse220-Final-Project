@@ -36,4 +36,4 @@ public class GameApp {
             frame.setVisible(true);
         });
     } // main
-} // end GameApp 
+} // end GameApp

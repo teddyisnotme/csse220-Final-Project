@@ -8,3 +8,8 @@
 /Platforms.class
 /WorldConstrain.class
 /SoundEffect.class
+/GameState.class
+/LevelLoader.class
+/LevelLoader$LevelData.class
+/LevelController.class
+/GameComponent$1.class

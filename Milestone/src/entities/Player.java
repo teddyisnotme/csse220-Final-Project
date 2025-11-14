@@ -1,11 +1,9 @@
-package entities;
-
-import game.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
+package entities; 
+import game.*; 
+import java.awt.*; 
+import java.awt.event.KeyEvent; 
+import java.awt.image.BufferedImage; 
 import javax.imageio.ImageIO;
-
 /**
  * Class: Player
  * @author Agnes Wang, Shi Liang, Teddy Wei
