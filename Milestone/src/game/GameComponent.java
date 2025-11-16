@@ -118,14 +118,13 @@ public class GameComponent extends JComponent {
         objects.clear();
         collectibles.clear();
 
-        objects.add(player); // keep player
+        objects.add(player);
         objects.addAll(levelController.getPlatforms());
         objects.addAll(levelController.getEnemies());
         collectibles.addAll(levelController.getCollectibles());
 
         currentLevel = levelIndex;
 
-        // Reset player position
         player.x = 100;
         player.y = 400;
         player.vx = 0;

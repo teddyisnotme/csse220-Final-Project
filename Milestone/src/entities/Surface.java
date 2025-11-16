@@ -4,6 +4,19 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+/**
+ * Class: Surface
+ * Author: Agnes Wang
+ * <br>Purpose: Represents a moving or static platform (surface) in the game world.
+ * Surfaces can move horizontally or vertically between set bounds, and can be collided with by players or enemies.
+ * <br>Restrictions: Must be updated and drawn within a game loop to function correctly.
+ * <br>Example:
+ * <pre>
+ *    Surface s = new Surface(100, 300, 200, 20, 2, true, 50, 400);
+ *    s.update();
+ *    s.draw(g);  
+ * </pre>
+ */
 public class Surface {
 
     private int x, y;
@@ -13,6 +26,17 @@ public class Surface {
     private final boolean horizontal;
     private int dir = 1;
 
+    /**
+     * ensures: Creates a new Surface at the specified position, size, speed, and movement bounds.
+     * @param x the x-coordinate of the top-left corner
+     * @param y the y-coordinate of the top-left corner
+     * @param w the width of the surface
+     * @param h the height of the surface
+     * @param speed the speed of movement
+     * @param horizontal true if surface moves horizontally, false for vertical
+     * @param minBound the minimum x or y bound for movement
+     * @param maxBound the maximum x or y bound for movement
+     */
     public Surface(int x, int y, int w, int h, int speed,
                    boolean horizontal, int minBound, int maxBound) {
         this.x = x;

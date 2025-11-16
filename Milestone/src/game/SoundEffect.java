@@ -6,7 +6,7 @@ import java.net.URL;
 
 /**
  * Class: SoundEffect
- * @author Agnes Wang, Shi Liang, Teddy Wei
+ * @author Agnes Wang
  * <br>Purpose: Provides a static helper method to play short sound effects in the game.
  * <br>Restrictions: Only works with supported audio formats (e.g., WAV). Does not support streaming long audio files.
  * <br>For example:
