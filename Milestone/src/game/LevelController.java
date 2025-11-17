@@ -52,21 +52,37 @@ public class LevelController {
      * @param fileName the name of the level file to load
      */
     private void loadPlatformsFromFile(GameComponent game, String fileName) {
-        try (InputStream in = getClass().getResourceAsStream("/assets/levels/" + fileName);
-             Scanner scanner = new Scanner(in)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-                if (line.isEmpty()) continue;
-                String[] parts = line.split(",");
-                double x = Double.parseDouble(parts[0]);
-                double y = Double.parseDouble(parts[1]);
-                int w = Integer.parseInt(parts[2]);
-                int h = Integer.parseInt(parts[3]);
-                platforms.add(new Platform(game, x, y, w, h));
-            }
-        } catch (Exception e) {
-            System.err.println("Error loading level file: " + fileName);
-        }
+    	try (InputStream in = getClass().getResourceAsStream("/assets/levels/" + fileName);
+    	         Scanner scanner = new Scanner(in)) {
+
+    	        while (scanner.hasNextLine()) {
+    	            String line = scanner.nextLine().trim();
+    	            if (line.isEmpty() || line.startsWith("#")) continue;
+
+    	            String[] parts = line.split(",");
+    	            String type = parts[0].trim().toUpperCase();
+
+    	            switch (type) {
+    	                case "PLATFORM" -> {
+    	                    double x = Double.parseDouble(parts[1]);
+    	                    double y = Double.parseDouble(parts[2]);
+    	                    int w = Integer.parseInt(parts[3]);
+    	                    int h = Integer.parseInt(parts[4]);
+    	                    platforms.add(new Platform(game, x, y, w, h));
+    	                }
+    	                case "ENEMY" -> {
+    	                    double x = Double.parseDouble(parts[1]);
+    	                    double y = Double.parseDouble(parts[2]);
+    	                    double left = Double.parseDouble(parts[3]);
+    	                    double right = Double.parseDouble(parts[4]);
+    	                    enemies.add(new Enemy(game, x, y, left, right));
+    	                }
+    	                default -> System.err.println("Unknown type in level file: " + type);
+    	            }
+    	        }
+    	    } catch (Exception e) {
+    	        System.err.println("Error loading level file: " + fileName);
+    	    }
     }
 
     public List<Platform> getPlatforms() { return platforms; }

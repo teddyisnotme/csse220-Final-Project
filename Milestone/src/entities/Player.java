@@ -28,6 +28,8 @@ public class Player extends GameObject {
     private boolean pressingDown = false;
     private BufferedImage sprite;
     private boolean recentlyHit = false;
+    private int invincibleTimer = 0;
+    private static final int INVINCIBLE_DURATION = 60;
 
     /**
      * ensures: Initializes player position, size, and loads player sprite image.
@@ -111,7 +113,7 @@ public class Player extends GameObject {
      */
     public boolean tryCollect(Collectible c) {
         if (c == null) return false;
-        if (!c.isCollected() && getBounds().intersects(c.getBounds()) && pressingDown) {
+        if (!c.isCollected() && getBounds().intersects(c.getBounds())) {
             score += c.getValue(); 
             c.collect();
             return true;
@@ -142,7 +144,19 @@ public class Player extends GameObject {
         vy += gravity;
         x += vx;
         y += vy;
-
+        
+        for (GameObject obj : game.getObjects()) {
+            if (obj instanceof Platform platform) {
+                if (getBounds().intersects(platform.getBounds())) {
+                    // Check if player is landing on top
+                    if (y + height - vy <= platform.getBounds().getY()) {
+                        y = platform.getBounds().getY() - height;
+                        vy = 0;
+                        jumping = false;
+                    }
+                }
+            }
+        }
         if (y >= game.getHeight() - 80) {
             y = game.getHeight() - 80;
             vy = 0;
@@ -153,6 +167,13 @@ public class Player extends GameObject {
         	x = game.getWidth();
         if (x > game.getWidth()) 
         	x = 0;
+        
+        if (invincibleTimer > 0) {
+            invincibleTimer--;
+            if (invincibleTimer == 0) {
+                recentlyHit = false;
+            }
+        }
     } // update
     
     public void resetHit() {
@@ -165,6 +186,10 @@ public class Player extends GameObject {
 
     public void markHit() {
         recentlyHit = true;
+        invincibleTimer = INVINCIBLE_DURATION;
+    }
+    public void resetLives() {
+        lives = 3;
     }
 
     /**
@@ -173,6 +198,9 @@ public class Player extends GameObject {
      */
     @Override
     public void drawOn(Graphics2D g) {
+    	if (invincibleTimer > 0 && (invincibleTimer / 5) % 2 == 0) {
+            return;
+        }
         if (sprite != null)
             g.drawImage(sprite, (int)x, (int)y, width, height, null);
         else {
@@ -180,4 +208,5 @@ public class Player extends GameObject {
             g.fillRect((int)x, (int)y, width, height);
         }
     } // drawOn
+    
 } // end Player

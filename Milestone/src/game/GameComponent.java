@@ -5,6 +5,7 @@ import entities.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.swing.Timer;
@@ -88,7 +89,7 @@ public class GameComponent extends JComponent {
                 player.y += Math.signum(overlapY);
                 enemy.x -= Math.signum(overlapX);
                 enemy.y -= Math.signum(overlapY);
-            } else if (obj instanceof Enemy) player.resetHit();
+            }
         }
 
         Iterator<Collectible> it = collectibles.iterator();
@@ -102,14 +103,39 @@ public class GameComponent extends JComponent {
 
         if (collectibles.isEmpty()) {
             // Player collected all items -> load next level automatically
-            loadNextLevel();
+        	timer.stop();
+            int response = JOptionPane.showConfirmDialog(
+                this,
+                "You win Level " + (currentLevel + 1) + "! Proceed to next level?",
+                "Level Complete",
+                JOptionPane.YES_NO_OPTION
+            );
+
+            if (response == JOptionPane.YES_OPTION) {
+                loadNextLevel();
+            } else {
+                System.exit(0);
+            }
+
+            timer.start();
         }
 
         if (!player.isAlive()) {
             timer.stop();
-            JOptionPane.showMessageDialog(this,
-                    "Game Over! Final Score: " + player.getScore(),
-                    "Game Over", JOptionPane.INFORMATION_MESSAGE);
+            int response = JOptionPane.showConfirmDialog(
+                    this,
+                    "Game Over! Final Score: " + player.getScore() + "\nPlay again?",
+                    "Game Over",
+                    JOptionPane.YES_NO_OPTION
+                );
+
+                if (response == JOptionPane.YES_OPTION) {
+                    reloadCurrentLevel();
+                    player.resetLives(); // add this helper below
+                    timer.start();
+                } else {
+                    System.exit(0);
+                }
         }
     }
 
@@ -134,7 +160,25 @@ public class GameComponent extends JComponent {
     private void reloadCurrentLevel() {
         player = new Player(this, 100, 400);
         loadLevel(currentLevel);
+        for (KeyListener kl : getKeyListeners()) {
+            removeKeyListener(kl);
+        }
+        addKeyListener(new GameController(player, collectibles) {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                super.keyPressed(e);
+                switch (e.getKeyCode()) {
+                    case java.awt.event.KeyEvent.VK_N -> loadNextLevel();
+                    case java.awt.event.KeyEvent.VK_P -> loadPreviousLevel();
+                    case java.awt.event.KeyEvent.VK_R -> {
+                        if (!player.isAlive()) reloadCurrentLevel();
+                    }
+                }
+            }
+        });
+
         timer.start();
+        requestFocusInWindow();
     }
 
     private void loadNextLevel() {
@@ -167,5 +211,9 @@ public class GameComponent extends JComponent {
         g2.drawString("Lives: " + player.getLives(), 20, 30);
         g2.drawString("Score: " + player.getScore(), 20, 55);
         g2.drawString("Level: " + (currentLevel + 1), 20, 80);
+    }
+    
+    public List<GameObject> getObjects() {
+        return objects;
     }
 }
