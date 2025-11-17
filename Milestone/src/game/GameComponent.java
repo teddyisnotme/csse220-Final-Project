@@ -153,8 +153,7 @@ public class GameComponent extends JComponent {
 
         player.x = 100;
         player.y = 400;
-        player.vx = 0;
-        player.vy = 0;
+        player.resetState();
     }
 
     private void reloadCurrentLevel() {

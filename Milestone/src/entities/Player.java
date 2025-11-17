@@ -191,6 +191,14 @@ public class Player extends GameObject {
     public void resetLives() {
         lives = 3;
     }
+    public void resetState() {
+        left = false;
+        right = false;
+        jumping = false;
+        pressingDown = false;
+        vx = 0;
+        vy = 0;
+    }
 
     /**
      * ensures: Draws the player sprite or a green rectangle if missing.
